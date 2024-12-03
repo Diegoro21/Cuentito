@@ -1,21 +1,24 @@
 import React from 'react';
-import Tutorial from './app/screens/Tutorial';
 import { View, StyleSheet } from 'react-native';
+import Tutorial from './app/screens/Tutorial';
+import Login from './app/screens/Login';
 
 const App = () => {
   return (
     <View style={styles.container}>
-      <Tutorial />
+      {/* <Tutorial /> */}
+      <Login/>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5F5F5',
   },
   text: {
     fontSize: 20,
