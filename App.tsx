@@ -1,10 +1,11 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import Tutorial from './app/screens/Tutorial';
 
 const App = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Hola Mundo</Text>
+      <Tutorial />
     </View>
   );
 };
