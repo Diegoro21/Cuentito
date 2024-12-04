@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, Alert } from 'react-native';
 import Button from '../components/Button';
 
-export default function Login() {
+export default function Login( {navigation}: any ) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   const handleSubmit = () => {
-    Alert.alert('Formulario enviado', `Email: ${email}\nContraseña: ${password}`);
+    navigation.navigate('tutorial'); // Navega a la pantalla "Home"
   };
 
   return (

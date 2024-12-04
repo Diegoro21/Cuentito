@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, View, StyleSheet, Dimensions, Image, Text } from 'react-native';
+import { Animated, View, StyleSheet, Dimensions, Text } from 'react-native';
 import Button from '../components/Button';
 
 const { width, height } = Dimensions.get('window');
 
-const Tutorial = () => {
+const Tutorial = ({ navigation}:any ) => {
   const [firstStep, setFirstStep] = useState(true);
 
   const translateX = useRef(new Animated.Value(width)).current;
@@ -115,6 +115,9 @@ const Tutorial = () => {
   const onPressButton = () => {
     clearTimeouts();
     resetAnimations();
+    if(!firstStep){
+      navigation.navigate('home')
+    }
 
     setFirstStep(false);
 

@@ -15,7 +15,7 @@ export default function Button({ onPress, title, color, colortext, underlayColor
     return (
       <TouchableHighlight
         style={[styles.buttonPrimary, { 
-            backgroundColor: color || '#3448F0', 
+            backgroundColor: color || '#40A69F', 
             borderColor: hasBorder ? (borderColor || '#000') : 'transparent',
             borderWidth: hasBorder ? 1 : 0 
         }

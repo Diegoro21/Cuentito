@@ -1,14 +1,15 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Tutorial from './app/screens/Tutorial';
-import Login from './app/screens/Login';
+import Navigaton from './app/navigation/Navigation';
+import Home from './app/screens/Home';
 
 const App = () => {
   return (
-    <View style={styles.container}>
-      {/* <Tutorial /> */}
-      <Login/>
-    </View>
+    <Home/>
+  //   <NavigationContainer>
+  //   <Navigaton />
+  // </NavigationContainer>
   );
 };
 
