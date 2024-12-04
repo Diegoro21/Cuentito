@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export default function Login(navigation: any ) {
+export default function Login({navigation}: any ) {
   const [username, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -51,10 +51,9 @@ console.log(data);
         // Login exitoso
         const { accessToken, refreshToken } = data.data;
         await AsyncStorage.setItem('accessToken', accessToken); 
-        await AsyncStorage.setItem('refreshToken', refreshToken); 
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+        await AsyncStorage.setItem('@isLogged', 'true');
         navigation.navigate('Tutorial');
-   
-        // Aquí podrías guardar el token en AsyncStorage o Context
       } else {
         // Error del backend
         setErrors({ email: data.message || 'Error al iniciar sesión.' });
@@ -69,7 +68,7 @@ console.log(data);
 
 
   return (
-    <ScrollView style={styles.containerInputs}>
+    <ScrollView contentContainerStyle={styles.containerInputs}>
         <Text style={styles.textTitle}>Inicia sesión en tu cuenta</Text>
 
       <TextInput
@@ -113,7 +112,8 @@ const styles = StyleSheet.create({
     containerInputs: {
     width: '100%',
     flex: 1,
-    // justifyContent: 'center',
+    height: '100%',
+    justifyContent: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#f8f9fa',
   },

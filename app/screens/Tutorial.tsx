@@ -4,7 +4,21 @@ import Button from '../components/Button';
 
 const { width, height } = Dimensions.get('window');
 
-const Tutorial = ({ navigation}:any ) => {
+import { StackNavigationProp } from '@react-navigation/stack';
+
+type RootStackParamList = {
+  TabNavigator: undefined;
+  Login: undefined;
+  Tutorial: undefined;
+};
+
+type TutorialScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Tutorial'>;
+
+interface TutorialProps {
+  navigation: TutorialScreenNavigationProp;
+}
+
+const Tutorial = ({ navigation }: TutorialProps) => {
   const [firstStep, setFirstStep] = useState(true);
 
   const translateX = useRef(new Animated.Value(width)).current;
@@ -115,8 +129,8 @@ const Tutorial = ({ navigation}:any ) => {
   const onPressButton = () => {
     clearTimeouts();
     resetAnimations();
-    if(!firstStep){
-      navigation.navigate('home')
+    if (!firstStep) {
+      navigation.navigate('TabNavigator');
     }
 
     setFirstStep(false);
