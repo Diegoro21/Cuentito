@@ -3,13 +3,17 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Navigaton from './app/navigation/Navigation';
 import Home from './app/screens/Home';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const App = () => {
   return (
-    <Home/>
-  //   <NavigationContainer>
-  //   <Navigaton />
-  // </NavigationContainer>
+    // <Home/>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+
+      <NavigationContainer>
+        <Navigaton />
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 };
 
