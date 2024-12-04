@@ -5,7 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './app/screens/Home';
-import Login from './app/screens/login';
+import Login from './app/screens/Login';
 
 const Stack = createStackNavigator();
 

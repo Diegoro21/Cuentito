@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, Alert } from 'react-native';
 import Button from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'react-native-gesture-handler';
 
-export default function Login( {navigation}: any ) {
+export default function Login(navigation: any ) {
   const [username, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -15,9 +16,10 @@ export default function Login( {navigation}: any ) {
     // Validación del email
     if (!username.trim()) {
       newErrors.email = 'El campo de email no puede estar vacío.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
-      newErrors.email = 'El email no es válido.';
-    }
+    } 
+    // else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
+    //   newErrors.email = 'El email no es válido.';
+    // }
 
     // Validación de la contraseña
     if (!password.trim()) {
@@ -31,7 +33,7 @@ export default function Login( {navigation}: any ) {
     }
 
     try {
-      const response = await fetch('https://api.example.com/login', {
+      const response = await fetch('https://a41c-181-164-108-63.ngrok-free.app/Auth/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,18 +45,15 @@ export default function Login( {navigation}: any ) {
       });
 
       const data = await response.json();
+console.log(data);
 
-      if (response.ok && data.status === 'éxito') {
+      if (data.status === 'éxito') {
         // Login exitoso
         const { accessToken, refreshToken } = data.data;
         await AsyncStorage.setItem('accessToken', accessToken); 
         await AsyncStorage.setItem('refreshToken', refreshToken); 
-        if (await AsyncStorage.getItem('accessToken', refreshToken)) {
-          await AsyncStorage.setItem('refreshToken', refreshToken); 
-          navigation.navigate('home');
-        } else {
-          navigation.navigate('tutorial');
-        }
+        navigation.navigate('Tutorial');
+   
         // Aquí podrías guardar el token en AsyncStorage o Context
       } else {
         // Error del backend
@@ -70,7 +69,7 @@ export default function Login( {navigation}: any ) {
 
 
   return (
-    <View style={styles.containerInputs}>
+    <ScrollView style={styles.containerInputs}>
         <Text style={styles.textTitle}>Inicia sesión en tu cuenta</Text>
 
       <TextInput
@@ -106,7 +105,7 @@ export default function Login( {navigation}: any ) {
           <Button title="Iniciar sesión" onPress={validateForm} />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -114,7 +113,7 @@ const styles = StyleSheet.create({
     containerInputs: {
     width: '100%',
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#f8f9fa',
   },
