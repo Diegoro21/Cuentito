@@ -1,34 +1,49 @@
-import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Navigaton from './app/navigation/Navigation';
-import Home from './app/screens/Home';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './app/screens/Home';
+import Login from './app/screens/login';
+
+const Stack = createStackNavigator();
 
 const App = () => {
-  return (
-    // <Home/>
-    <GestureHandlerRootView style={{ flex: 1 }}>
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
 
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const loggedStatus = await AsyncStorage.getItem('@isLogged');
+        if (loggedStatus !== null) {
+          setIsLogged(JSON.parse(loggedStatus));  // Lo convertimos de string a booleano
+        }
+      } catch (e) {
+        console.error('Error al leer el estado de login:', e);
+      } finally {
+        setIsLoading(false);  // Deja de mostrar el indicador de carga
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  if (isLoading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Navigaton />
+        <Stack.Navigator initialRouteName={isLogged ? 'Home' : 'Login'}>
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Login" component={Login} />
+        </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-  },
-  text: {
-    fontSize: 20,
-    color: '#333',
-  },
-});
 
 export default App;
