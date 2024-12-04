@@ -116,7 +116,7 @@ const Tutorial = ({ navigation}:any ) => {
     clearTimeouts();
     resetAnimations();
     if(!firstStep){
-      navigation.navigate('home')
+      navigation.navigate('HomeStack', {screen:'Home'})
     }
 
     setFirstStep(false);
