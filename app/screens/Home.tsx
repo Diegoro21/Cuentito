@@ -61,7 +61,7 @@ const Home = () => {
           />
           <TouchableOpacity onPress={addCharacter} style={styles.addButton}>
             <Text style={styles.addText}>Agregar</Text>
-          <Ionicons name="add-circle-outline" size={20}/>;
+          <Ionicons name="add-circle-outline" size={20}/>
           </TouchableOpacity>
         </View>
 

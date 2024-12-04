@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Home from './app/screens/Home';
-import Login from './app/screens/Login';
-
-const Stack = createStackNavigator();
+import AuthStack from './app/navigation/AuthStack';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,10 +33,7 @@ const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={isLogged ? 'Home' : 'Login'}>
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Login" component={Login} />
-        </Stack.Navigator>
+        <AuthStack />
       </NavigationContainer>
     </GestureHandlerRootView>
   );
