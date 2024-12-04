@@ -45,7 +45,6 @@ export default function Login({navigation}: any ) {
       });
 
       const data = await response.json();
-console.log(data);
 
       if (data.status === 'éxito') {
         // Login exitoso
@@ -69,7 +68,7 @@ console.log(data);
 
 
   return (
-    <ScrollView style={styles.containerInputs}>
+    <ScrollView contentContainerStyle={styles.containerInputs}>
         <Text style={styles.textTitle}>Inicia sesión en tu cuenta</Text>
 
       <TextInput
@@ -112,8 +111,9 @@ console.log(data);
 const styles = StyleSheet.create({
     containerInputs: {
     width: '100%',
+    height: '100%',
     flex: 1,
-    // justifyContent: 'center',
+     justifyContent: 'center',
     paddingHorizontal: 20,
     backgroundColor: '#f8f9fa',
   },
