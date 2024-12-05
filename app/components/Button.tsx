@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, GestureResponderEvent, Alert} from 'react-native';
 
@@ -9,9 +10,10 @@ interface ButtonProps {
     underlayColor?: string; // Color del hover al clickear
     borderColor?: string;     // Color del borde
     hasBorder?: boolean;      // Flag para mostrar o no el borde
+    icon?: any;     // icono
   }
 
-export default function Button({ onPress, title, color, colortext, underlayColor, hasBorder, borderColor }: ButtonProps) {
+export default function Button({ onPress, title, color, colortext, underlayColor, hasBorder, borderColor, icon }: ButtonProps) {
     return (
       <TouchableHighlight
         style={[styles.buttonPrimary, { 
@@ -23,7 +25,20 @@ export default function Button({ onPress, title, color, colortext, underlayColor
         underlayColor={underlayColor || '#004085'}
         onPress={onPress} // Ejecuta la función pasada por props
       >
-        <Text style={[styles.buttonText, { color: colortext || '#fff' }]}>{title}</Text>
+        <View style={styles.containerButton}>
+          <Text style={[styles.buttonText, { color: colortext || '#fff' }]}>{title}</Text>
+          {icon && (
+            <Ionicons
+              name= {icon}
+              size={20}
+              color="white"
+              style={{
+                marginLeft: 10,
+                transform: [{ scaleX: -1 }], // Esto espeja el ícono
+              }}
+            />
+          )}
+        </View>
       </TouchableHighlight>
     );
   }
@@ -45,4 +60,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  containerButton: {
+    display:'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

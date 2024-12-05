@@ -12,15 +12,20 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useFonts } from "@expo-google-fonts/concert-one";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import Button from "../components/Button";
 
 
-const Home = () => {
+const Home = ({navigation}: any) => {
   const [characters, setCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] = useState("");
   const [genre, setGenre] = useState("1");
   const [length, setLength] = useState("Corto");
   const [openGenre, setOpenGenre] = useState(false);
   const [openLength, setOpenLength] = useState(false);
+
+  const createCuento = async () => {
+    navigation.navigate('Cuento');
+  };
 
   const [fontsLoaded] = useFonts({
     ConcertOne: require("@expo-google-fonts/concert-one"),
@@ -97,9 +102,17 @@ const Home = () => {
           dropDownContainerStyle={{ zIndex: 500 }}
         />
 
-        <TouchableOpacity style={styles.button}>
-          <View style={styles.buttonContent}>
-            <Text style={styles.buttonText}>Crear cuento</Text>
+        <View style={styles.containerButton}>
+          <View style={styles.buttonWidth}>
+            <Button title="Iniciar sesión" onPress={createCuento} icon='color-wand-outline' />
+          </View>
+        </View>
+
+        {/* TE COMENTE EL BOTON POR PETEEEEE NO TENIA NI ANIMACION AL CLICKEAR, 
+                SI TODO QUEDA BIEN PODES BORRAR LOS ESTILOS AL PEDO */}
+        {/* <TouchableOpacity style={styles.button}>
+          <View style={styles.buttonContent} >
+            <Text onPress={createCuento} style={styles.buttonText}>Crear cuento</Text>
             <Ionicons
               name="color-wand-outline"
               size={20}
@@ -110,7 +123,7 @@ const Home = () => {
               }}
             />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
   );
 };
@@ -197,6 +210,15 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontFamily: "ConcertOne", // Fuente personalizada
+    },
+    containerButton: {
+      marginTop: 150,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonWidth: {
+      // width: '40%'
     },
 });
 
