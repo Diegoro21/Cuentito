@@ -21,7 +21,7 @@ export default function Button({ onPress, title, color, colortext, underlayColor
             borderColor: hasBorder ? (borderColor || '#000') : 'transparent',
             borderWidth: hasBorder ? 1 : 0 
         }
-    ]}
+        ]}
         underlayColor={underlayColor || '#004085'}
         onPress={onPress} // Ejecuta la función pasada por props
       >

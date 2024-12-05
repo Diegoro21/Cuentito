@@ -14,10 +14,7 @@ export default function Cuento( {navigation}: any ) {
   
 
   return (
-    <ImageBackground source={require('../../assets/images/fondo.png')} // Ruta de la imagen de fondo
-    style={styles.containerInputs}
-    resizeMode="cover" // La imagen cubrirá toda la pantalla
-    >
+    <View style={styles.containerInputs}>
 
       <View style={styles.viewTitle}>
         <Text style={styles.textTitle} 
@@ -43,7 +40,7 @@ export default function Cuento( {navigation}: any ) {
         </View>
       </View>
       
-    </ImageBackground>
+    </View>
   );
 }
 
@@ -56,7 +53,7 @@ const styles = StyleSheet.create({
   },
   viewTitle: {
     justifyContent: 'center',
-    marginTop: '8%',
+    marginTop: '12%',
     backgroundColor: '#FFB319',
     borderRadius: 6,
     borderColor: 'Black',
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     width: '100%',
-    marginTop:  '10%',
+    marginTop:  '6%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
