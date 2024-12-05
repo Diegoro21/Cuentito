@@ -13,12 +13,13 @@ import { useFonts } from "@expo-google-fonts/concert-one";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
 import Modal from "react-native-modal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = ({ navigation }: any) => {
   const [characters, setCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] = useState("");
   const [genre, setGenre] = useState("1");
-  const [length, setLength] = useState("Corto");
+  const [length, setLength] = useState("1");
   const [openGenre, setOpenGenre] = useState(false);
   const [openLength, setOpenLength] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -26,17 +27,21 @@ const Home = ({ navigation }: any) => {
 
   const createCuento = async () => {
     setIsLoading(true); // Muestra el loading al iniciar
+    const token = await AsyncStorage.getItem('accessToken');
     try {
-      const response = await fetch("https://a41c-181-164-108-63.ngrok-free.app/Auth/token", {
+      const response = await fetch("https://apicuentito.facturante.com/Cuentos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+           'Authorization' : `Bearer ${token}` 
         },
-        body: JSON.stringify({
-          characters,
-          genre,
-          length,
-        }),
+        body: JSON.stringify(
+          {
+            "personajes": characters,
+            "genero": genre,
+            "longitud": length
+          }
+        ),
       });
 
       const data = await response.json();
@@ -49,14 +54,14 @@ const Home = ({ navigation }: any) => {
       setModalVisible(true);
       console.error(err);
     } finally {
-      setIsLoading(false); // Oculta el loading al finalizar
+      setIsLoading(false);
     }
   };
 
   const addCharacter = () => {
     if (currentCharacter.trim()) {
       setCharacters((prevCharacters) => [...prevCharacters, currentCharacter]);
-      setCurrentCharacter(""); // Limpiar el campo de texto después de agregar
+      setCurrentCharacter("");
     }
   };
 
@@ -74,7 +79,6 @@ const Home = ({ navigation }: any) => {
         </View>
       </Modal>
 
-      {/* Modal para el loading */}
       <Modal isVisible={isLoading} animationIn="fadeIn" animationOut="fadeOut">
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#00b894" />
@@ -130,9 +134,9 @@ const Home = ({ navigation }: any) => {
         open={openLength}
         value={length}
         items={[
-          { label: "Corto", value: "Corto" },
-          { label: "Medio", value: "Medio" },
-          { label: "Largo", value: "Largo" },
+          { label: "Corto", value: "1" },
+          { label: "Medio", value: "2" },
+          { label: "Largo", value: "3" },
         ]}
         setOpen={setOpenLength}
         setValue={setLength}
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   loadingContainer: {
-    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo sombreado
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
