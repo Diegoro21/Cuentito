@@ -104,7 +104,7 @@ const Home = ({navigation}: any) => {
 
         <View style={styles.containerButton}>
           <View style={styles.buttonWidth}>
-            <Button title="Iniciar sesión" onPress={createCuento} icon='color-wand-outline' />
+            <Button title="Crear cuento" onPress={createCuento} icon='color-wand-outline' />
           </View>
         </View>
 

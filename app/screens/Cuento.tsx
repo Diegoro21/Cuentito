@@ -9,7 +9,7 @@ export default function Cuento( {navigation}: any ) {
 
 
   const navigateTo = () => {
-    navigation.navigate('HomeStack', {screen:'Home'})
+    navigation.navigate('HomeStack', {screen:'Mis Cuentitos'})
   };
   
 

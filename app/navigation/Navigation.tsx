@@ -19,7 +19,7 @@ function HomeStack() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: any;
 
-          if (route.name === 'Home') {
+          if (route.name === 'Crear Cuento') {
             // iconName = focused ? 'home' : 'home-outline';
             iconName = focused ? 'lead-pencil' : 'lead-pencil';
           } else if (route.name === 'Mis Cuentitos') {
@@ -33,8 +33,9 @@ function HomeStack() {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Crear Cuento" component={Home} />
       <Tab.Screen name="Mis Cuentitos" component={MisCuentitos} />
+      {/* <Tab.Screen name="Cuento" component={Cuento} /> */}
     </Tab.Navigator>
   );
 }
@@ -42,7 +43,7 @@ function HomeStack() {
 export function TabNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Login" component={Login} />
+      {/* <Stack.Screen name="Login" component={Login} /> */}
       <Stack.Screen name="Tutorial" component={Tutorial} />
       <Stack.Screen name="HomeStack" component={HomeStack} />
       <Stack.Screen name="Cuento" component={Cuento} />
