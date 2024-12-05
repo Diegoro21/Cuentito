@@ -33,7 +33,7 @@ export default function Login({navigation}: any ) {
     }
 
     try {
-      const response = await fetch('https://a41c-181-164-108-63.ngrok-free.app/Auth/token', {
+      const response = await fetch('https://apicuentito.facturante.com/Auth/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

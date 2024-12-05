@@ -134,9 +134,9 @@ const Home = ({ navigation }: any) => {
         open={openLength}
         value={length}
         items={[
-          { label: "Corto", value: "1" },
-          { label: "Medio", value: "2" },
-          { label: "Largo", value: "3" },
+          { label: "Corto", value: "Corto" },
+          { label: "Medio", value: "Medio" },
+          { label: "Largo", value: "Largo" },
         ]}
         setOpen={setOpenLength}
         setValue={setLength}
