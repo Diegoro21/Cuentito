@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useFonts } from "@expo-google-fonts/concert-one";
@@ -46,7 +47,7 @@ const Home = ({ navigation }: any) => {
 
       const data = await response.json();
       if (data.status === "éxito") {
-        navigation.navigate("Cuento");
+        navigation.navigate("Cuento", data);
       } else {
         setModalVisible(true);
       }
@@ -70,6 +71,7 @@ const Home = ({ navigation }: any) => {
   };
 
   return (
+    <KeyboardAvoidingView>
     <ScrollView contentContainerStyle={styles.container}>
       {/* Modal para errores */}
       <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
@@ -150,6 +152,7 @@ const Home = ({ navigation }: any) => {
         </View>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

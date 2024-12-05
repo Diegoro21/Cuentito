@@ -2,44 +2,52 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, Dimensions, ImageBackground } from 'react-native';
 import Button from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RouteProp } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
-export default function Cuento( {navigation}: any ) {
+type CuentoRouteProp = RouteProp<{ Cuento: { data: any } }, 'Cuento'>;
 
+interface CuentoProps {
+  route: CuentoRouteProp;
+}
+
+export default function Cuento({ navigation }: any, route : CuentoProps) {
+
+  console.log(route)
 
   const navigateTo = () => {
-    navigation.navigate('HomeStack', {screen:'Mis Cuentitos'})
+    navigation.navigate('HomeStack', { screen: 'Mis Cuentitos' })
   };
-  
+
 
   return (
     <View style={styles.containerInputs}>
 
       <View style={styles.viewTitle}>
-        <Text style={styles.textTitle} 
-          numberOfLines={2} 
+        <Text style={styles.textTitle}
+          numberOfLines={2}
           adjustsFontSizeToFit>La Tierra de los Sueños Brillantes
         </Text>
       </View>
 
       <View style={styles.containerText}>
-        <ScrollView style={styles.containerScroll} 
-        keyboardShouldPersistTaps="always"
-        persistentScrollbar={true}
+        <ScrollView style={styles.containerScroll}
+          keyboardShouldPersistTaps="always"
+          persistentScrollbar={true}
         >
           <Text style={styles.text}>
-          asadasdasd1 dasdas dasd dasd asd sada asdasd sadsa dasdasad dasd adasdasd asdasdsa asdasdasd asdsadas adsadas adsadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds  asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa das asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas dsdasd asdsadasd das dasdasd sad asdasdasdas Hola
+            asadasdasd1 dasdas dasd dasd asd sada asdasd sadsa dasdasad dasd adasdasd asdasdsa asdasdasd asdsadas adsadas adsadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds  asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa das asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas dsdasd asdsadasd das dasdasd sad asdasdasdas Hola
           </Text>
         </ScrollView>
       </View>
-      
+
       <View style={styles.containerButton}>
         <View style={styles.buttonWidth}>
           <Button title="Ir a mis cuentitos" onPress={navigateTo} />
         </View>
       </View>
-      
+
     </View>
   );
 }
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // flexShrink: 1,
   },
-  containerScroll:{
+  containerScroll: {
     // overflow: 'scroll',
     // padding: 15,
     margin: 15,
@@ -100,7 +108,7 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     width: '100%',
-    marginTop:  '6%',
+    marginTop: '6%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
