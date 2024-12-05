@@ -63,8 +63,10 @@ const MisCuentitos = ({ navigation }: any) => {
 
 
   // Función para navegar a la pantalla de "Cuento"
-  const goToCuento = (id: string) => {
-    navigation.navigate('Cuento', { id });
+  const goToCuento = (cuento: any) => {
+    console.log(cuento)
+    AsyncStorage.setItem('cuento', JSON.stringify(cuento));
+    navigation.navigate('Cuento');
   };
 
   // Función para navegar a "Crear Cuento"
@@ -103,7 +105,7 @@ const MisCuentitos = ({ navigation }: any) => {
             dataCuento.map((cuento: Cuento) => (
               <TouchableHighlight
                 key={cuento.idCuento}
-                onPress={() => goToCuento(cuento.idCuento)}
+                onPress={() => goToCuento(cuento)}
                 activeOpacity={1}
                 underlayColor="#FFE645"
                 style={styles.containerTouch}
