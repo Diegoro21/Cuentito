@@ -19,7 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = ({ navigation }: any) => {
   const [characters, setCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] = useState("");
-  const [genre, setGenre] = useState("1");
+  const [genre, setGenre] = useState("Sin especificar");
   const [length, setLength] = useState("Corto");
   const [openGenre, setOpenGenre] = useState(false);
   const [openLength, setOpenLength] = useState(false);
@@ -120,12 +120,12 @@ const Home = ({ navigation }: any) => {
         open={openGenre}
         value={genre}
         items={[
-          { label: "Sin especificar", value: "1" },
-          { label: "Fantasía", value: "2" },
-          { label: "Aventura", value: "3" },
-          { label: "Cuento de hadas", value: "4" },
-          { label: "Romance", value: "5" },
-          { label: "Comedia", value: "6" },
+          { label: "Sin especificar", value: "Sin especificar" },
+          { label: "Fantasía", value: "Fantasía" },
+          { label: "Aventura", value: "Aventura" },
+          { label: "Cuento de hadas", value: "Cuento de hadas" },
+          { label: "Romance", value: "Romance" },
+          { label: "Comedia", value: "Comedia" },
         ]}
         setOpen={setOpenGenre}
         setValue={setGenre}
