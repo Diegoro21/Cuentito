@@ -1,22 +1,66 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Dimensions, ScrollView, Animated, TouchableHighlight } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Dimensions, ScrollView, Animated, TouchableHighlight, Modal, ActivityIndicator } from "react-native";
 import Button from "../components/Button";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get('window');
 
+type Cuento = {
+  idCuento: string;
+  titulo: string;
+  cuento: string;
+  errores: string[];
+};
+
 const MisCuentitos = ({ navigation }: any) => {
-  // Datos para generar los cuentos dinámicamente
-  const cuentosData = [
-    { id: '1', title: 'La tierra de los sueños brillantes', genre: 'Fantasía' },
-    { id: '2', title: 'El bosque encantado', genre: 'Aventura' },
-    { id: '4', title: 'Las estrellas y sus secretos', genre: 'Ciencia ficción' },
-    { id: '5', title: 'Las estrellas y sus secretos', genre: 'Ciencia ficción' },
-    { id: '6', title: 'Las estrellas y sus secretos', genre: 'Ciencia ficción' },
-    { id: '7', title: 'Las estrellas y sus secretos', genre: 'Ciencia ficción' },
-    { id: '8', title: 'Las estrellas y sus secretos', genre: 'Ciencia ficción' },
-    { id: '9', title: 'Las estrellas y sus secretos', genre: 'Ciencia ficción' },
-  ];
+  const [dataCuento, setDataCuento] = useState<Cuento[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadData = async () => {
+
+    const token = await AsyncStorage.getItem('accessToken');
+    console.log(token)
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("https://apicuentito.facturante.com/Cuentos", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      const data = await response.json();
+      if (data.status === "éxito") {
+        setIsLoading(false);
+        if (Array.isArray(data.data)) {
+          setDataCuento(data.data);
+        }
+        console.log(data.data)
+      } else {
+        setIsLoading(false);
+        //setModalVisible(true);
+      }
+    } catch (err) {
+      //setModalVisible(true);
+      setIsLoading(false);
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+      //setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData()
+
+    return () => {
+      // Clean up
+    }
+  }, [])
+
 
   // Función para navegar a la pantalla de "Cuento"
   const goToCuento = (id: string) => {
@@ -30,6 +74,15 @@ const MisCuentitos = ({ navigation }: any) => {
 
   return (
     <View style={styles.containerCuentos}>
+
+      <Modal visible={isLoading} transparent>
+        <View style={styles.overlay}>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#00b894" />
+            <Text style={styles.loadingText}>Cargando...</Text>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.containerImg}>
         <Animated.Image source={require('../../assets/images/dragonLector.png')} />
       </View>
@@ -46,35 +99,29 @@ const MisCuentitos = ({ navigation }: any) => {
           keyboardShouldPersistTaps="always"
           persistentScrollbar={true}
         >
-          <View style={styles.containerCuentitos}>
-            {cuentosData.map((cuento) => (
+          {dataCuento.length > 0 ? (
+            dataCuento.map((cuento: Cuento) => (
               <TouchableHighlight
-                key={cuento.id}
-                onPress={() => goToCuento(cuento.id)} // Pasar el ID al navegar
-                activeOpacity={1} // Sin opacidad al presionar
-                underlayColor="#FFE645" // Sin color de fondo al presionar
+                key={cuento.idCuento}
+                onPress={() => goToCuento(cuento.idCuento)}
+                activeOpacity={1}
+                underlayColor="#FFE645"
                 style={styles.containerTouch}
               >
                 <View style={styles.containerCuentitos2}>
                   <View style={styles.containerText1}>
-                    <Text style={styles.textTitleCuento}>{cuento.title}</Text>
-                    <Text style={styles.textGenero}>{cuento.genre}</Text>
+                    <Text style={styles.textTitleCuento}>{cuento.titulo}</Text>
+                    <Text style={styles.textGenero}>Género no especificado</Text>
                   </View>
                   <View style={styles.actionCuento}>
-                    <View style={styles.containerButton}>
-                      <Ionicons
-                        name="arrow-forward"
-                        size={20}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                      />
-                    </View>
+                    <Ionicons name="arrow-forward" size={20} style={{ marginLeft: 10 }} />
                   </View>
                 </View>
               </TouchableHighlight>
-            ))}
-          </View>
+            ))
+          ) : (
+            <Text>No hay cuentos disponibles</Text>
+          )}
         </ScrollView>
       </View>
 
@@ -107,6 +154,27 @@ const styles = StyleSheet.create({
     height: '14%',
     display: 'flex',
     alignItems: 'center',
+  },overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo oscuro y semitransparente
+  },
+  loadingContainer: {
+    backgroundColor: "transparent",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // Sombra en Android
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#333",
   },
   textTitle: {
     fontFamily: 'Concert One',
@@ -165,7 +233,7 @@ const styles = StyleSheet.create({
   containerTouch: {
     borderRadius: 8,
     marginVertical: 5,
-  },
+  }
 });
 
 export default MisCuentitos;

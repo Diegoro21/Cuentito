@@ -24,7 +24,7 @@ const Home = ({ navigation }: any) => {
   const [openGenre, setOpenGenre] = useState(false);
   const [openLength, setOpenLength] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Estado para el loader
+  const [isLoading, setIsLoading] = useState(false);
 
   const createCuento = async () => {
     setIsLoading(true); // Muestra el loading al iniciar
@@ -47,7 +47,8 @@ const Home = ({ navigation }: any) => {
 
       const data = await response.json();
       if (data.status === "éxito") {
-        navigation.navigate("Cuento", data);
+        AsyncStorage.setItem('cuento', JSON.stringify(data.data));
+        navigation.navigate("Cuento");
       } else {
         setModalVisible(true);
       }
@@ -137,7 +138,7 @@ const Home = ({ navigation }: any) => {
         value={length}
         items={[
           { label: "Corto", value: "Corto" },
-          { label: "Medio", value: "Medio" },
+          { label: "Medio", value: "Mediano" },
           { label: "Largo", value: "Largo" },
         ]}
         setOpen={setOpenLength}

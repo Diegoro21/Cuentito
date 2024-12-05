@@ -6,15 +6,19 @@ import { RouteProp } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
-type CuentoRouteProp = RouteProp<{ Cuento: { data: any } }, 'Cuento'>;
+export default function Cuento({ navigation }: any) {
+  const [cuento, setCuento] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
 
-interface CuentoProps {
-  route: CuentoRouteProp;
-}
-
-export default function Cuento({ navigation }: any, route : CuentoProps) {
-
-  console.log(route)
+  React.useEffect(() => {
+    AsyncStorage.getItem('cuento').then((resp: any) => {
+      if (resp) {
+        const parsedCuento = JSON.parse(resp);
+        setCuento(parsedCuento.cuento);
+        setTitle(parsedCuento.titulo);
+      }
+    });
+  }, []);
 
   const navigateTo = () => {
     navigation.navigate('HomeStack', { screen: 'Mis Cuentitos' })
@@ -27,7 +31,7 @@ export default function Cuento({ navigation }: any, route : CuentoProps) {
       <View style={styles.viewTitle}>
         <Text style={styles.textTitle}
           numberOfLines={2}
-          adjustsFontSizeToFit>La Tierra de los Sueños Brillantes
+          adjustsFontSizeToFit>{title}
         </Text>
       </View>
 
@@ -37,7 +41,7 @@ export default function Cuento({ navigation }: any, route : CuentoProps) {
           persistentScrollbar={true}
         >
           <Text style={styles.text}>
-            asadasdasd1 dasdas dasd dasd asd sada asdasd sadsa dasdasad dasd adasdasd asdasdsa asdasdasd asdsadas adsadas adsadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds  asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa das asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas ds asadasdasd dasdas dasd dasd asd sada asdasd sadsa dasdasadasd as dasdas dasd asdasd asdasdasdasd dsa dasdasd asdsadasd das dasdasd sad asdasdasdas dsdasd asdsadasd das dasdasd sad asdasdasdas Hola
+            {cuento}
           </Text>
         </ScrollView>
       </View>
