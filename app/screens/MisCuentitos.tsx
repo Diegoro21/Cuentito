@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Dimensions, ScrollView, Animated, TouchableHighlight, Modal, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Dimensions, ScrollView, Animated, TouchableHighlight, ActivityIndicator } from "react-native";
 import Button from "../components/Button";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Modal from "react-native-modal";
 
 const { width, height } = Dimensions.get('window');
 
@@ -77,12 +78,10 @@ const MisCuentitos = ({ navigation }: any) => {
   return (
     <View style={styles.containerCuentos}>
 
-      <Modal visible={isLoading} transparent>
-        <View style={styles.overlay}>
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#00b894" />
-            <Text style={styles.loadingText}>Cargando...</Text>
-          </View>
+      <Modal isVisible={isLoading} animationIn="fadeIn" animationOut="fadeOut">
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#00b894" />
+          <Text style={styles.loadingText}>Cargando...</Text>
         </View>
       </Modal>
       <View style={styles.containerImg}>
@@ -156,27 +155,22 @@ const styles = StyleSheet.create({
     height: '14%',
     display: 'flex',
     alignItems: 'center',
-  },overlay: {
+  }, overlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo oscuro y semitransparente
   },
   loadingContainer: {
-    backgroundColor: "transparent",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5, // Sombra en Android
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: "#333",
+    color: "#fff",
   },
   textTitle: {
     fontFamily: 'Concert One',

@@ -5,12 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
   ActivityIndicator,
   KeyboardAvoidingView,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useFonts } from "@expo-google-fonts/concert-one";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
 import Modal from "react-native-modal";
@@ -27,27 +27,25 @@ const Home = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const createCuento = async () => {
-    setIsLoading(true); // Muestra el loading al iniciar
-    const token = await AsyncStorage.getItem('accessToken');
+    setIsLoading(true);
+    const token = await AsyncStorage.getItem("accessToken");
     try {
       const response = await fetch("https://apicuentito.facturante.com/Cuentos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-           'Authorization' : `Bearer ${token}` 
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(
-          {
-            "personajes": characters,
-            "genero": genre,
-            "longitud": length
-          }
-        ),
+        body: JSON.stringify({
+          personajes: characters,
+          genero: genre,
+          longitud: length,
+        }),
       });
 
       const data = await response.json();
       if (data.status === "éxito") {
-        AsyncStorage.setItem('cuento', JSON.stringify(data.data));
+        AsyncStorage.setItem("cuento", JSON.stringify(data.data));
         navigation.navigate("Cuento");
       } else {
         setModalVisible(true);
@@ -72,88 +70,90 @@ const Home = ({ navigation }: any) => {
   };
 
   return (
-    <KeyboardAvoidingView>
-    <View style={styles.container}>
-      {/* Modal para errores */}
-      <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
-        <View style={styles.modal}>
-          <Text style={styles.modalText}>Algo salió mal :(</Text>
-          <Button title="Cerrar" onPress={() => setModalVisible(false)} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          {/* Modal para errores */}
+          <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
+            <View style={styles.modal}>
+              <Text style={styles.modalText}>Algo salió mal :(</Text>
+              <Button title="Cerrar" onPress={() => setModalVisible(false)} />
+            </View>
+          </Modal>
+
+          <Modal isVisible={isLoading} animationIn="fadeIn" animationOut="fadeOut">
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#00b894" />
+              <Text style={styles.loadingText}>Cargando...</Text>
+            </View>
+          </Modal>
+
+          <Text style={styles.title}>Creá tu cuento</Text>
+          <Text style={styles.label}>Agregá tus personajes</Text>
+          <View style={styles.tagContainer}>
+            {characters.map((char, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => removeCharacter(index)}
+                style={styles.tag}
+              >
+                <Text style={styles.tagText}>{char} ✕</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <View style={styles.addCharacterContainer}>
+            <TextInput
+              style={styles.input}
+              value={currentCharacter}
+              onChangeText={setCurrentCharacter}
+              placeholder="Nombre"
+            />
+            <TouchableOpacity onPress={addCharacter} style={styles.addButton}>
+              <Text style={styles.addText}>Agregar</Text>
+              <Ionicons name="add-circle-outline" size={20} />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Temática del cuento</Text>
+          <DropDownPicker
+            open={openGenre}
+            value={genre}
+            items={[
+              { label: "Sin especificar", value: "Sin especificar" },
+              { label: "Fantasía", value: "Fantasía" },
+              { label: "Aventura", value: "Aventura" },
+              { label: "Cuento de hadas", value: "Cuento de hadas" },
+              { label: "Romance", value: "Romance" },
+              { label: "Comedia", value: "Comedia" },
+            ]}
+            setOpen={setOpenGenre}
+            setValue={setGenre}
+            containerStyle={[styles.dropdown, { zIndex: 1000 }]}
+            dropDownContainerStyle={{ zIndex: 1000 }}
+          />
+
+          <DropDownPicker
+            open={openLength}
+            value={length}
+            items={[
+              { label: "Corto", value: "Corto" },
+              { label: "Medio", value: "Mediano" },
+              { label: "Largo", value: "Largo" },
+            ]}
+            setOpen={setOpenLength}
+            setValue={setLength}
+            containerStyle={[styles.dropdown, { zIndex: 500 }]}
+            dropDownContainerStyle={{ zIndex: 500 }}
+          />
+
+          <View style={styles.containerButton}>
+            <View style={styles.buttonWidth}>
+              <Button title="Crear cuento" onPress={createCuento} icon="color-wand-outline" />
+            </View>
+          </View>
         </View>
-      </Modal>
-
-      <Modal isVisible={isLoading} animationIn="fadeIn" animationOut="fadeOut">
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#00b894" />
-          <Text style={styles.loadingText}>Cargando...</Text>
-        </View>
-      </Modal>
-
-      <Text style={styles.title}>Creá tu cuento</Text>
-      <Text style={styles.label}>Agregá tus personajes</Text>
-      <View style={styles.tagContainer}>
-        {characters.map((char, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => removeCharacter(index)}
-            style={styles.tag}
-          >
-            <Text style={styles.tagText}>{char} ✕</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.addCharacterContainer}>
-        <TextInput
-          style={styles.input}
-          value={currentCharacter}
-          onChangeText={setCurrentCharacter}
-          placeholder="Nombre"
-        />
-        <TouchableOpacity onPress={addCharacter} style={styles.addButton}>
-          <Text style={styles.addText}>Agregar</Text>
-          <Ionicons name="add-circle-outline" size={20} />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.label}>Temática del cuento</Text>
-      <DropDownPicker
-        open={openGenre}
-        value={genre}
-        items={[
-          { label: "Sin especificar", value: "Sin especificar" },
-          { label: "Fantasía", value: "Fantasía" },
-          { label: "Aventura", value: "Aventura" },
-          { label: "Cuento de hadas", value: "Cuento de hadas" },
-          { label: "Romance", value: "Romance" },
-          { label: "Comedia", value: "Comedia" },
-        ]}
-        setOpen={setOpenGenre}
-        setValue={setGenre}
-        containerStyle={[styles.dropdown, { zIndex: 1000 }]}
-        dropDownContainerStyle={{ zIndex: 1000 }}
-      />
-
-      <DropDownPicker
-        open={openLength}
-        value={length}
-        items={[
-          { label: "Corto", value: "Corto" },
-          { label: "Medio", value: "Mediano" },
-          { label: "Largo", value: "Largo" },
-        ]}
-        setOpen={setOpenLength}
-        setValue={setLength}
-        containerStyle={[styles.dropdown, { zIndex: 500 }]}
-        dropDownContainerStyle={{ zIndex: 500 }}
-      />
-
-      <View style={styles.containerButton}>
-        <View style={styles.buttonWidth}>
-          <Button title="Crear cuento" onPress={createCuento} icon="color-wand-outline" />
-        </View>
-      </View>
-    </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -43,9 +43,9 @@ function HomeStack() {
 export function TabNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Tutorial" component={Tutorial} />
-      <Stack.Screen name="HomeStack" component={HomeStack} />
+      <Stack.Screen name="Login" component={Login} options={{gestureEnabled: false}}/>
+      <Stack.Screen name="Tutorial" component={Tutorial} options={{gestureEnabled: false}} />
+      <Stack.Screen name="HomeStack" component={HomeStack} options={{gestureEnabled: false}} />
       <Stack.Screen name="Cuento" component={Cuento} />
     </Stack.Navigator>
   );
