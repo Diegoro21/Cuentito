@@ -212,8 +212,8 @@ const Tutorial = ({ navigation}:any ) => {
       )}
 
       <Animated.View style={[{ opacity: textOpacity }]}>
-        <Text style={styles.title}>{firstStep ? 'Paso 1!' : 'Paso 2'}</Text>
-        <Text style={[styles.subtitle]}>{firstStep ? 'Subtítulo 1' : 'Subtítulo 2 lalala'}</Text>
+        <Text style={styles.title}>{firstStep ? 'Escribí tus personajes!' : 'Elegí el tema de tu cuentito'}</Text>
+        <Text style={[styles.subtitle]}>{firstStep ? 'Podés agregar todos los personajes que quieras: Nombres, animales, famosos, etc.' : 'Una aventura en otro planeta, tesoros submarinos, viajes en el tiempo o incluso desafíos de la vida diaria como un romance.'}</Text>
       </Animated.View>
 
       <Animated.View style={[{ opacity: textOpacity }, { position: 'absolute', bottom: height / 10, right: 20 }]}>

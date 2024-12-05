@@ -5,31 +5,53 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Keyboard,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useFonts } from "@expo-google-fonts/concert-one";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Button from "../components/Button";
+import Modal from "react-native-modal";
 
-
-const Home = ({navigation}: any) => {
+const Home = ({ navigation }: any) => {
   const [characters, setCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] = useState("");
   const [genre, setGenre] = useState("1");
   const [length, setLength] = useState("Corto");
   const [openGenre, setOpenGenre] = useState(false);
   const [openLength, setOpenLength] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Estado para el loader
 
   const createCuento = async () => {
-    navigation.navigate('Cuento');
-  };
+    setIsLoading(true); // Muestra el loading al iniciar
+    try {
+      const response = await fetch("https://a41c-181-164-108-63.ngrok-free.app/Auth/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          characters,
+          genre,
+          length,
+        }),
+      });
 
-  const [fontsLoaded] = useFonts({
-    ConcertOne: require("@expo-google-fonts/concert-one"),
-  });
+      const data = await response.json();
+      if (data.status === "éxito") {
+        navigation.navigate("Cuento");
+      } else {
+        setModalVisible(true);
+      }
+    } catch (err) {
+      setModalVisible(true);
+      console.error(err);
+    } finally {
+      setIsLoading(false); // Oculta el loading al finalizar
+    }
+  };
 
   const addCharacter = () => {
     if (currentCharacter.trim()) {
@@ -43,319 +65,183 @@ const Home = ({navigation}: any) => {
   };
 
   return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Crea tu cuento</Text>
-        <Text style={styles.label}>Agrega tus personajes</Text>
-        <View style={styles.tagContainer}>
-          {characters.map((char, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => removeCharacter(index)}
-              style={styles.tag}
-            >
-              <Text style={styles.tagText}>{char} ✕</Text>
-            </TouchableOpacity>
-          ))}
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Modal para errores */}
+      <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
+        <View style={styles.modal}>
+          <Text style={styles.modalText}>Algo salió mal :(</Text>
+          <Button title="Cerrar" onPress={() => setModalVisible(false)} />
         </View>
-        <View style={styles.addCharacterContainer}>
-          <TextInput
-            style={styles.input}
-            value={currentCharacter}
-            onChangeText={setCurrentCharacter}
-            placeholder="Nombre"
-          />
-          <TouchableOpacity onPress={addCharacter} style={styles.addButton}>
-            <Text style={styles.addText}>Agregar</Text>
-          <Ionicons name="add-circle-outline" size={20}/>
+      </Modal>
+
+      {/* Modal para el loading */}
+      <Modal isVisible={isLoading} animationIn="fadeIn" animationOut="fadeOut">
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#00b894" />
+          <Text style={styles.loadingText}>Cargando...</Text>
+        </View>
+      </Modal>
+
+      <Text style={styles.title}>Creá tu cuento</Text>
+      <Text style={styles.label}>Agregá tus personajes</Text>
+      <View style={styles.tagContainer}>
+        {characters.map((char, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => removeCharacter(index)}
+            style={styles.tag}
+          >
+            <Text style={styles.tagText}>{char} ✕</Text>
           </TouchableOpacity>
-        </View>
-
-        <Text style={styles.label}>Temática del cuento</Text>
-        <DropDownPicker
-          open={openGenre}
-          value={genre}
-          items={[
-            { label: "Sin especificar", value: "1" },
-            { label: "Fantasía", value: "2" },
-            { label: "Aventura", value: "3" },
-            { label: "Cuento de hadas", value: "4" },
-            { label: "Romance", value: "5" },
-            { label: "Comedia", value: "6" },
-          ]}
-          setOpen={setOpenGenre}
-          setValue={setGenre}
-          containerStyle={[styles.dropdown, { zIndex: 1000 }]}
-          dropDownContainerStyle={{ zIndex: 1000 }}
+        ))}
+      </View>
+      <View style={styles.addCharacterContainer}>
+        <TextInput
+          style={styles.input}
+          value={currentCharacter}
+          onChangeText={setCurrentCharacter}
+          placeholder="Nombre"
         />
+        <TouchableOpacity onPress={addCharacter} style={styles.addButton}>
+          <Text style={styles.addText}>Agregar</Text>
+          <Ionicons name="add-circle-outline" size={20} />
+        </TouchableOpacity>
+      </View>
 
-        <DropDownPicker
-          open={openLength}
-          value={length}
-          items={[
-            { label: "Corto", value: "Corto" },
-            { label: "Medio", value: "Medio" },
-            { label: "Largo", value: "Largo" },
-          ]}
-          setOpen={setOpenLength}
-          setValue={setLength}
-          containerStyle={[styles.dropdown, { zIndex: 500 }]}
-          dropDownContainerStyle={{ zIndex: 500 }}
-        />
+      <Text style={styles.label}>Temática del cuento</Text>
+      <DropDownPicker
+        open={openGenre}
+        value={genre}
+        items={[
+          { label: "Sin especificar", value: "1" },
+          { label: "Fantasía", value: "2" },
+          { label: "Aventura", value: "3" },
+          { label: "Cuento de hadas", value: "4" },
+          { label: "Romance", value: "5" },
+          { label: "Comedia", value: "6" },
+        ]}
+        setOpen={setOpenGenre}
+        setValue={setGenre}
+        containerStyle={[styles.dropdown, { zIndex: 1000 }]}
+        dropDownContainerStyle={{ zIndex: 1000 }}
+      />
 
-        <View style={styles.containerButton}>
-          <View style={styles.buttonWidth}>
-            <Button title="Crear cuento" onPress={createCuento} icon='color-wand-outline' />
-          </View>
+      <DropDownPicker
+        open={openLength}
+        value={length}
+        items={[
+          { label: "Corto", value: "Corto" },
+          { label: "Medio", value: "Medio" },
+          { label: "Largo", value: "Largo" },
+        ]}
+        setOpen={setOpenLength}
+        setValue={setLength}
+        containerStyle={[styles.dropdown, { zIndex: 500 }]}
+        dropDownContainerStyle={{ zIndex: 500 }}
+      />
+
+      <View style={styles.containerButton}>
+        <View style={styles.buttonWidth}>
+          <Button title="Crear cuento" onPress={createCuento} icon="color-wand-outline" />
         </View>
-
-        {/* TE COMENTE EL BOTON POR PETEEEEE NO TENIA NI ANIMACION AL CLICKEAR, 
-                SI TODO QUEDA BIEN PODES BORRAR LOS ESTILOS AL PEDO */}
-        {/* <TouchableOpacity style={styles.button}>
-          <View style={styles.buttonContent} >
-            <Text onPress={createCuento} style={styles.buttonText}>Crear cuento</Text>
-            <Ionicons
-              name="color-wand-outline"
-              size={20}
-              color="white"
-              style={{
-                marginLeft: 10,
-                transform: [{ scaleX: -1 }], // Esto espeja el ícono
-              }}
-            />
-          </View>
-        </TouchableOpacity> */}
-      </ScrollView>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        //flex: 1,
-        justifyContent: 'center',  // Centra verticalmente
-        alignItems: 'center',  // Centra horizontalmente
-        padding: 20,
-        height: '100%'
-    },
-    title: {
-        fontSize: 24,
-        fontFamily: "ConcertOne", // Fuente personalizada
-        marginBottom: 20,
-        textAlign: "center",
-    },
-    label: {
-        fontSize: 16,
-        fontFamily: "ConcertOne", // Fuente personalizada
-        marginBottom: 10,
-    },
-    tagContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        marginBottom: 10,
-    },
-    tag: {
-        backgroundColor: "#00b894",
-        borderRadius: 20,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        marginRight: 5,
-        marginBottom: 5,
-    },
-    tagText: {
-        color: "#fff",
-        fontFamily: "ConcertOne", // Fuente personalizada
-    },
-    addCharacterContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 20,
-    },
-    input: {
-        flex: 1,
-        borderColor: "#ccc",
-        borderWidth: 1,
-        borderRadius: 8,
-        padding: 10,
-        marginRight: 10,
-        backgroundColor: "#fff",
-    },
-    addButton: {
-        padding: 10,
-        backgroundColor: "#FFB319",
-        borderRadius: 8,
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    addText: {
-        color: "black",
-        fontFamily: "ConcertOne", // Fuente personalizada
-    },
-    dropdown: {
-        marginBottom: 20,
-    },
-    button: {
-        marginTop: 20,
-        backgroundColor: "#00b894",
-        paddingVertical: 15,
-        borderRadius: 8,
-        width: 150,
-        justifyContent: 'center',  // Asegura que el contenido dentro del botón esté centrado
-        alignItems: 'center',  // Alinea los elementos al centro
-    },
-    buttonContent: {
-        flexDirection: 'row',  // Los elementos (ícono y texto) se alinearán horizontalmente
-        alignItems: 'center',  // Centra verticalmente los elementos
-    },
-    buttonText: {
-        color: "#fff",
-        textAlign: "center",
-        fontSize: 16,
-        fontFamily: "ConcertOne", // Fuente personalizada
-    },
-    containerButton: {
-      marginTop: 150,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    buttonWidth: {
-      // width: '40%'
-    },
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    height: "100%",
+  },
+  modal: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  loadingContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.7)", // Fondo sombreado
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: "ConcertOne",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  label: {
+    fontSize: 16,
+    fontFamily: "ConcertOne",
+    marginBottom: 10,
+  },
+  tagContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 10,
+  },
+  tag: {
+    backgroundColor: "#00b894",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginRight: 5,
+    marginBottom: 5,
+  },
+  tagText: {
+    color: "#fff",
+    fontFamily: "ConcertOne",
+  },
+  addCharacterContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  input: {
+    flex: 1,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    marginRight: 10,
+    backgroundColor: "#fff",
+    height: 50,
+  },
+  addButton: {
+    padding: 10,
+    backgroundColor: "#FFB319",
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    height: 50,
+  },
+  addText: {
+    color: "black",
+    fontFamily: "ConcertOne",
+  },
+  dropdown: {
+    marginBottom: 20,
+  },
+  containerButton: {
+    marginTop: 150,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonWidth: {},
 });
 
 export default Home;
-
-
-
-
-
-
-
-
-
-// import React, { useState } from "react";
-// import {
-//   View,
-//   Text,
-//   TextInput,
-//   TouchableOpacity,
-//   StyleSheet,
-//   Keyboard,
-//   TouchableWithoutFeedback,
-// } from "react-native";
-// import { useFonts } from "@expo-google-fonts/concert-one";
-
-// const Home = () => {
-//   const [characters, setCharacters] = useState<string[]>([]);
-//   const [currentCharacter, setCurrentCharacter] = useState<string>("");
-
-//   const [fontsLoaded] = useFonts({
-//     ConcertOne: require("@expo-google-fonts/concert-one"),
-//   });
-
-//   // Función para eliminar un personaje
-//   const removeCharacter = (index: number) => {
-//     setCharacters(characters.filter((_, i) => i !== index));
-//   };
-
-
-
-//   return (
-//     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-//       <View style={styles.container}>
-//         <Text style={styles.title}>Crea tu cuento</Text>
-
-//         {/* Personajes */}
-//         <Text style={styles.label}>Agrega tus personajes</Text>
-//         <View style={styles.tagContainer}>
-//           {characters.map((char, index) => (
-//             <TouchableOpacity
-//               key={index}
-//               onPress={() => removeCharacter(index)}
-//               style={styles.tag}
-//             >
-//               <Text style={styles.tagText}>
-//                 {char} ✕
-//               </Text>
-//             </TouchableOpacity>
-//           ))}
-//         </View>
-
-//         {/* Input de personaje */}
-//         <View style={styles.addCharacterContainer}>
-//           <TextInput
-//             style={styles.input}
-//             value={currentCharacter}
-//             onChangeText={setCurrentCharacter}
-//             placeholder="Nombre"
-//           />
-//           <TouchableOpacity onPress={addCharacter} style={styles.addButton}>
-//             <Text style={styles.addText}>Agregar</Text>
-//           </TouchableOpacity>
-//         </View>
-
-//         {/* Aquí puedes agregar el resto de la UI */}
-//       </View>
-//     </TouchableWithoutFeedback>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//     backgroundColor: "#f8f8f8",
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontFamily: "ConcertOne", // Fuente personalizada
-//     marginBottom: 20,
-//     textAlign: "center",
-//   },
-//   label: {
-//     fontSize: 16,
-//     fontFamily: "ConcertOne", // Fuente personalizada
-//     marginBottom: 10,
-//   },
-//   tagContainer: {
-//     flexDirection: "row",
-//     flexWrap: "wrap",
-//     marginBottom: 10,
-//   },
-//   tag: {
-//     backgroundColor: "#00b894",
-//     borderRadius: 20,
-//     paddingHorizontal: 10,
-//     paddingVertical: 5,
-//     marginRight: 5,
-//     marginBottom: 5,
-//   },
-//   tagText: {
-//     color: "#fff",
-//     fontFamily: "ConcertOne", // Fuente personalizada
-//   },
-//   addCharacterContainer: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     marginBottom: 20,
-//   },
-//   input: {
-//     flex: 1,
-//     borderColor: "#ccc",
-//     borderWidth: 1,
-//     borderRadius: 8,
-//     padding: 10,
-//     marginRight: 10,
-//     backgroundColor: "#fff",
-//   },
-//   addButton: {
-//     padding: 10,
-//     backgroundColor: "#00b894",
-//     borderRadius: 8,
-//   },
-//   addText: {
-//     color: "#fff",
-//     fontFamily: "ConcertOne", // Fuente personalizada
-//   },
-// });
-
-// export default Home;
