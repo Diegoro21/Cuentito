@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, Dimensions, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions } from 'react-native';
 import Button from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { RouteProp } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 

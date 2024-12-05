@@ -20,7 +20,7 @@ const Home = ({ navigation }: any) => {
   const [characters, setCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] = useState("");
   const [genre, setGenre] = useState("1");
-  const [length, setLength] = useState("1");
+  const [length, setLength] = useState("Corto");
   const [openGenre, setOpenGenre] = useState(false);
   const [openLength, setOpenLength] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -73,7 +73,7 @@ const Home = ({ navigation }: any) => {
 
   return (
     <KeyboardAvoidingView>
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       {/* Modal para errores */}
       <Modal isVisible={isModalVisible} onBackdropPress={() => setModalVisible(false)}>
         <View style={styles.modal}>
@@ -152,7 +152,7 @@ const Home = ({ navigation }: any) => {
           <Button title="Crear cuento" onPress={createCuento} icon="color-wand-outline" />
         </View>
       </View>
-    </ScrollView>
+    </View>
     </KeyboardAvoidingView>
   );
 };
